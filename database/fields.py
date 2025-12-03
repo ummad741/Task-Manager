@@ -31,16 +31,16 @@ str_30 = Annotated[str, 30]
 str_50 = Annotated[str, 50]
 # ORM uni avtomatik chaqirmaydi
 full_text = Annotated[str, mapped_column(Text, deferred=True)]
-#yaratilgan vaqt 
 created_at = Annotated[
     datetime,
-    mapped_column(server_default=text('TIMEZONE(utc,now())'))
+    mapped_column(
+        server_default=text("CURRENT_TIMESTAMP")
+    )
 ]
-#ozgargan vaqt
 updated_at = Annotated[
     datetime,
     mapped_column(
-        server_default=text('TIMEZONE(utc,now())'),
+        server_default=text("CURRENT_TIMESTAMP"),
         onupdate=datetime.utcnow
     )
 ]

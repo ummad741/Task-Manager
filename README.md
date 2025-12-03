@@ -1,12 +1,73 @@
-# Project-Loyiya
+# Project-Loyiha
+
 - ### Loyihada quyidagi qatlamlar bo‘lishi kerak:Domain, Repository, Service, API, Schema, Infrastructure, Core Config.
 
 - ### API → Service → Repository → Database ketma-ketligida ishlaydi.
 
 - ### Har bir qatlam faqat o‘z vazifasi uchun javob beradi va yuqoriga bog‘lanadi, pastga emas.
 
+## Technologies
 
-```bash 
+- ### Database: PostgreSQL
+
+- ### ORM: SQLAlchemy
+
+- ### Web Framework: FastAPI
+
+- ### Migration Tool: Alembic
+
+## Alembic Config
+
+1. ### Alembic init buyrug‘i / alembic init usage
+
+```bash
+alembic init <migrations_dir>
+# misol:
+alembic init database/migrations
+```
+
+2. ### alembic.ini ga sqlalchemy.url qo‘yish
+
+```python
+# mirgrations/env.py
+config.set_main_option("sqlalchemy.url", yourDSN)
+```
+
+3. ### env.py va target_metadata (autogenerate uchun)
+
+```python
+# env.py ichida siz ORM Base.metadata ni target_metadata sifatida berishingiz kerak, shunda alembic --autogenerate jadvallarni aniqlaydi.
+from myproject.database.base import Base  # sizning Declarative base
+
+target_metadata = Base.metadata
+```
+
+4. ### ModuleNotFoundError: No module named 'database' — sabab va tuzatish
+
+- **init**.py — papkani Python package ga aylantiradi (oldingi Python versiyalarida muhim, hozir ham tavsiya qilinadi).
+
+- Module — bitta .py fayl (masalan models.py).
+
+- Package — ichida bir yoki bir nechta modul bo‘lgan papka (masalan database/).
+6. ### Alembic bilan migratsiya quick start (summary + commands)
+
+1. Init: alembic init database/migrations
+
+2. alembic.ini ni sozla yoki env.py da DSN fallback qo‘sh.
+
+3. Autogenerate: alembic revision --autogenerate -m "init"
+
+4. Apply: alembic upgrade head
+
+5. Rollback: alembic downgrade -1 yoki alembic downgrade <revision_id>
+```bash
+alembic init database/migrations
+alembic revision --autogenerate -m "init"
+alembic upgrade head
+alembic downgrade -1
+```
+## File structure 
+```bash
 project/
 │
 ├── src/
@@ -24,11 +85,18 @@ project/
 │   │   ├── security.py
 │   │   └── exceptions.py
 │   │
-│   ├── db/
-│   │   ├── base.py
-│   │   ├── session.py
-│   │   ├── init_db.py
-│   │   └── migrations/   ← Alembic
+├── database/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── session.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── workers.py
+│   │   └── tasks.py
+│   ├── migrations/
+│   │    ├── env.py
+│   │    ├── README
+│   │    ├── versions/
 │   │
 │   ├── models/
 │   │   ├── user.py
@@ -65,50 +133,10 @@ project/
 └── README.md
 ```
 
-## 3. DQL — Data Query Language
-### SELECT
-```sql
-SELECT col1, col2 FROM table_name;
-SELECT * FROM table_name;
-```
-
-### Filtering
-```sql
-WHERE col = 10;
-WHERE col BETWEEN 10 AND 20;
-WHERE col LIKE 'A%';
-WHERE col ILIKE '%test';
-WHERE col IN (1,2,3);
-WHERE col IS NULL;
-WHERE col IS NOT NULL;
-```
-
-### Sorting / Limit
-```sql
-ORDER BY col ASC;
-ORDER BY col DESC;
-LIMIT 10;
-OFFSET 20;
-```
-
-### GROUP BY & HAVING
-```sql
-GROUP BY col;
-HAVING COUNT(*) > 1;
-```
-
-### JOINs
-```sql
-INNER JOIN
-LEFT JOIN
-RIGHT JOIN
-FULL JOIN
-CROSS JOIN
-LATERAL JOIN
-```
-
 ## 4. SQL Functions
+
 ### Aggregate
+
 ```sql
 COUNT(col)
 SUM(col)
@@ -118,6 +146,7 @@ MAX(col)
 ```
 
 ### String
+
 ```sql
 LOWER(col)
 UPPER(col)
@@ -129,6 +158,7 @@ LENGTH(col)
 ```
 
 ### Numeric
+
 ```sql
 ROUND(col)
 CEIL(col)
@@ -138,6 +168,7 @@ RANDOM()
 ```
 
 ### Date/Time
+
 ```sql
 NOW()
 CURRENT_DATE
@@ -148,6 +179,7 @@ EXTRACT(YEAR FROM ts)
 ```
 
 ## 5. Constraints
+
 ```sql
 PRIMARY KEY
 FOREIGN KEY
@@ -160,6 +192,7 @@ ON UPDATE CASCADE
 ```
 
 ## 6. Index Types
+
 ```sql
 CREATE INDEX idx ON table(col);
 CREATE INDEX idx_gin ON table USING GIN(jsonb_col);
@@ -168,7 +201,9 @@ CREATE INDEX idx_brin ON table USING BRIN(date_col);
 ```
 
 ## 7. Advanced SQL
+
 ### Window Functions
+
 ```sql
 ROW_NUMBER() OVER (PARTITION BY col ORDER BY id)
 RANK() OVER (...)
@@ -178,12 +213,14 @@ LAG(col, 1) OVER (...)
 ```
 
 ### Subqueries
+
 ```sql
 SELECT * FROM users WHERE id IN (SELECT user_id FROM orders);
 SELECT EXISTS(SELECT 1 FROM orders WHERE amount > 100);
 ```
 
 ### CTE
+
 ```sql
 WITH top_users AS (
     SELECT * FROM users WHERE score > 90
@@ -192,6 +229,7 @@ SELECT * FROM top_users;
 ```
 
 ### Transactions
+
 ```sql
 BEGIN;
 UPDATE accounts SET balance = balance - 100 WHERE id = 1;
@@ -200,6 +238,7 @@ COMMIT;
 ```
 
 ## 8. PostgreSQL Specific
+
 ```sql
 SERIAL, BIGSERIAL
 JSON, JSONB

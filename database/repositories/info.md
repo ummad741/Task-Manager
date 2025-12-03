@@ -51,3 +51,45 @@ class UserRepository:
         await db.refresh(obj)
         return obj
 ```
+
+## 3. DQL — Data Query Language
+### SELECT
+```sql
+SELECT col1, col2 FROM table_name;
+SELECT * FROM table_name;
+```
+
+### Filtering
+```sql
+WHERE col = 10;
+WHERE col BETWEEN 10 AND 20;
+WHERE col LIKE 'A%';
+WHERE col ILIKE '%test';
+WHERE col IN (1,2,3);
+WHERE col IS NULL;
+WHERE col IS NOT NULL;
+```
+
+### Sorting / Limit
+```sql
+ORDER BY col ASC;
+ORDER BY col DESC;
+LIMIT 10;
+OFFSET 20;
+```
+
+### GROUP BY & HAVING
+```sql
+GROUP BY col;
+HAVING COUNT(*) > 1;
+```
+
+### JOINs
+```sql
+INNER JOIN
+LEFT JOIN
+RIGHT JOIN
+FULL JOIN
+CROSS JOIN
+LATERAL JOIN
+```

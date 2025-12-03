@@ -4,11 +4,11 @@ from typing import List
 # Optionalning manosi bu None bolishi mumkun
 from datetime import date
 from typing import Optional
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import ForeignKey, String, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 # local files
 from database.config import Base
-from models.tasks import TasksTable
+from database.models.tasks import TasksTable
 from database.fields import (
     str_30, str_50,full_text
 )
@@ -20,9 +20,9 @@ class WorkersTable(Base):
         intern = "Intern"
 
     __tablename__ = 'workers'
-    name: str_30
-    last_name: str_30
-    birht_date: Mapped[date] = mapped_column(date)
+    name: Mapped[str_30]
+    last_name: Mapped[str_30]
+    birht_date: Mapped[date] = mapped_column(Date)
     email: Mapped[str] = mapped_column(String(255), unique=True)
     role: Mapped[Role]
     tasks: Mapped[List["Tasks"]] = relationship(

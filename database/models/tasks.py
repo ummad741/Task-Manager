@@ -19,8 +19,9 @@ class TasksTable(Base):
         three = 3
         one = 1
 
-    title: str_30
-    description: full_text
+    __tablename__ =  "tasks"
+    title: Mapped[str_30]
+    description: Mapped[full_text]
     level: Mapped[Level]
     point: Mapped[Point]
     workers_id: Mapped[int] = mapped_column(

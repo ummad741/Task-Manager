@@ -25,10 +25,13 @@ class Base(DeclarativeBase):
     # python type hint sqlalchemy columnga automate map qilish
     # anotated strlarni
     type_anotation_map = {
-        str_30: String(30),
-        str_50: String(50)
+        str_30: str_30,
+        str_50: str_50
     }
     id: Mapped[intpk]
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
+
+session_factory = sessionmaker(engine_sync)
+async_session_factory = async_sessionmaker(engine_async)
